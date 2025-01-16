@@ -1,0 +1,676 @@
+---
+# ====== Page: Add to Cart ===================================
+id: 19
+identification: 
+  name: Add to Cart
+  alias: ADD-TO-CART
+  title: Manage your Cart
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+dialog: 
+  width: 600
+  height: 600
+  chained: true
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authentication: Page Is Public
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-meta-tags: false
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Product =====================================
+  id: 109763475087421285441
+  identification: 
+    name: Product
+    type: Cards
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT product_id,
+          product_name,
+          unit_price,
+          product_details,
+          product_image,
+          image_mime_type,
+          image_filename,
+          image_charset,
+          image_last_updated,
+          color_id,
+          department_id,
+          clothing_id,
+          d.description, 
+          b.brand
+      FROM   products p,
+          json_table (p.product_details, '$' columns ( description varchar2(4000) path '$.description') ) d,
+          json_table (p.product_details, '$' columns ( brand       varchar2(4000) path '$.brand') ) b
+      WHERE  product_id = :p19_product_id
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Cards Container
+    template-options: 
+    - '#DEFAULT#'
+    - t-CardsRegion--styleC
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 109763475140333285442
+    appearance: 
+      layout: Float
+
+    card: 
+      primary-key-column-1: PRODUCT_ID
+
+    title: 
+      advanced-formatting: false
+      column: PRODUCT_NAME
+
+    subtitle: 
+      advanced-formatting: false
+      column: BRAND
+
+    body: 
+      advanced-formatting: false
+      column: DESCRIPTION
+
+    secondary-body: 
+      advanced-formatting: true
+      html-expression: 'Price: &UNIT_PRICE.'
+
+    icon-and-badge: 
+      icon-source: No Icon
+
+    media: 
+      advanced-formatting: false
+      source: BLOB Column
+      blob-column: PRODUCT_IMAGE
+      position: First
+      appearance: Auto
+      sizing: Fit
+
+    performance: 
+      lazy-loading: false
+
+    pagination: 
+      type: Scroll
+      show-total-count: false
+
+- # ====== Region: Customer Reviews ============================
+  id: 109976924939278294105
+  identification: 
+    name: Customer Reviews
+    type: Cards
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT m.rating,
+          m.review
+      FROM   products p,
+          product_reviews m
+      WHERE  p.product_name = m.product_name
+          AND p.product_id = :p19_product_id
+          order by m.rating desc
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 109976925078841294106
+    appearance: 
+      layout: Horizontal (Row)
+
+    title: 
+      advanced-formatting: true
+      html-expression: |
+        <b>Review:</b> &REVIEW. <br>
+        <b>Rating:</b> &RATING.
+
+    subtitle: 
+      advanced-formatting: false
+
+    body: 
+      advanced-formatting: false
+
+    secondary-body: 
+      advanced-formatting: false
+
+    icon-and-badge: 
+      icon-source: No Icon
+
+    media: 
+      advanced-formatting: false
+      source: No Media
+
+    performance: 
+      lazy-loading: false
+
+    pagination: 
+      type: Scroll
+      show-total-count: false
+
+    messages: 
+      when-no-data-found: There are no customer reviews yet.
+
+- # ====== Region: Buttons Bar  ================================
+  id: 109976925150874294107
+  identification: 
+    name: 'Buttons Bar '
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+page-items: 
+- # ====== Page Item: P19_ACTION ===============================
+  id: 109976925221304294108
+  identification: 
+    name: P19_ACTION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P19_PRODUCT_ID ===========================
+  id: 109976925389436294109
+  identification: 
+    name: P19_PRODUCT_ID
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 20
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P19_SHOPPING_CART_ITEMS ==================
+  id: 109976925426761294110
+  identification: 
+    name: P19_SHOPPING_CART_ITEMS
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 30
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P19_QUANTITY =============================
+  id: 109976925531651294111
+  identification: 
+    name: P19_QUANTITY
+    type: Select List
+
+  label: 
+    label: QUANTITY
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 40
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Static Values
+    static-values: 'STATIC:1;1,2;2,3;3,4;4,5;5'
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: Edit ========================================
+  id: 109976925700263294113
+  identification: 
+    button-name: Edit
+    label: 'Update Quantity '
+
+  layout: 
+    sequence: 50
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: CREATE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  server-side-condition: 
+    type: Item is NOT zero
+    item: P19_QUANTITY
+
+- # ====== Button: Delete ======================================
+  id: 109976925822611294114
+  identification: 
+    button-name: Delete
+    label: 'Remove from Cart '
+
+  layout: 
+    sequence: 50
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: EDIT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--danger
+    - t-Button--link
+    - t-Button--gapRight
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  server-side-condition: 
+    type: Item is NOT zero
+    item: P19_QUANTITY
+
+- # ====== Button: Add =========================================
+  id: 109976926089637294116
+  identification: 
+    button-name: Add
+    label: Add to Cart
+
+  layout: 
+    sequence: 60
+    region: 'Buttons Bar ' # 109976925150874294107
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  server-side-condition: 
+    type: Item is zero
+    item: P19_QUANTITY
+
+computations: 
+- # ====== Computation: P19_QUANTITY ===========================
+  id: 109976926161113294117
+  identification: 
+    item-name: P19_QUANTITY
+
+  execution: 
+    sequence: 10
+    point: Before Header
+
+  computation: 
+    type: Function Body
+    language: PL/SQL
+    pl/sql-function-body: 'RETURN manage_orders.product_exists(p_product => :P19_PRODUCT_ID);'
+
+processes: 
+- # ====== Process: Add product ================================
+  id: 109976926210942294118
+  identification: 
+    name: Add product
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+          IF manage_orders.product_exists(p_product => :P19_PRODUCT_ID) = 0 THEN
+              manage_orders.add_product (p_product  => :P19_PRODUCT_ID,
+                                      p_quantity => :P19_QUANTITY);
+          END IF;
+          :P19_ACTION := 'ADD';
+      END;
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: Add # 109976926089637294116
+
+- # ====== Process: Edit product ===============================
+  id: 109976926339857294119
+  identification: 
+    name: Edit product
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+          IF  manage_orders.product_exists(p_product => :P19_PRODUCT_ID) > 0 THEN
+              manage_orders.remove_product(p_product => :P19_PRODUCT_ID);
+              manage_orders.add_product (p_product  => :P19_PRODUCT_ID,
+                                      p_quantity => :P19_QUANTITY);
+          END IF;
+          :P19_ACTION := 'EDIT';
+      END;
+
+  execution: 
+    sequence: 20
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: Edit # 109976925700263294113
+
+- # ====== Process: Delete product =============================
+  id: 109976926403323294120
+  identification: 
+    name: Delete product
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+          IF manage_orders.product_exists(p_product => :P19_PRODUCT_ID) > 0 THEN
+              manage_orders.remove_product(p_product => :P19_PRODUCT_ID);
+          END IF;
+          :P19_ACTION := 'DELETE';
+      END;
+
+  execution: 
+    sequence: 30
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: Delete # 109976925822611294114
+
+- # ====== Process: Calculate Shopping Cart Items ==============
+  id: 109976926579461294121
+  identification: 
+    name: Calculate Shopping Cart Items
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+          :P19_SHOPPING_CART_ITEMS := manage_orders.get_quantity;
+      END;
+
+  execution: 
+    sequence: 40
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Close Dialog ===============================
+  id: 109976926601175294122
+  identification: 
+    name: Close Dialog
+    type: Close Dialog
+    execution-chain: None
+
+  settings: 
+    items-to-return-: 
+    - P19_SHOPPING_CART_ITEMS
+    - P19_PRODUCT_ID
+    - P19_ACTION
+    - P19_QUANTITY
+    show-success-messages: true
+
+  execution: 
+    sequence: 50
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+

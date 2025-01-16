@@ -1,0 +1,31 @@
+---
+- # ====== Application Process: Initialize Shopping Cart Hearder
+  id: 109826995375055035304
+  identification: 
+    name: Initialize Shopping Cart Hearder
+    type: NATIVE_PLSQL
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      -- Initialize shopping cart navigation bar to show appropriate icon and count
+      DECLARE
+          l_cnt NUMBER := manage_orders.get_quantity;
+      BEGIN
+          IF l_cnt > 0 THEN
+              :SHOPPING_CART_ITEMS := l_cnt;
+              :SHOPPING_CART_ICON := 'fa-cart-full';
+          ELSE
+              :SHOPPING_CART_ITEMS := '';
+              :SHOPPING_CART_ICON := 'fa-cart-empty';
+          END IF;
+      END;
+
+  execution: 
+    sequence: 1
+    point: Before Header
+
+  subscription: 
+    version-number: 15599421384620
+

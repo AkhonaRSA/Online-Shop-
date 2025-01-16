@@ -1,0 +1,910 @@
+---
+# ====== Page: Products ======================================
+id: 1
+identification: 
+  name: Products
+  alias: HOME
+  title: ACME Shop
+
+appearance: 
+  page-mode: Normal
+  page-template: Left Side Column
+  template-options: 
+  - '#DEFAULT#'
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authentication: Page Is Public
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-meta-tags: false
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Search Results ==============================
+  id: 108781396552325880020
+  identification: 
+    name: Search Results
+    type: Cards
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT "PRODUCT_ID",
+          "PRODUCT_NAME",
+          "UNIT_PRICE",
+          "PRODUCT_DETAILS",
+          "PRODUCT_IMAGE",
+          "IMAGE_MIME_TYPE",
+          "IMAGE_FILENAME",
+          "IMAGE_CHARSET",
+          "IMAGE_LAST_UPDATED",
+          "COLOR_ID",
+          (
+                  SELECT l1."COLOR"
+                  FROM   "COLOR_LOOKUP" l1
+                  WHERE  l1."COLOR_ID" = m."COLOR_ID") "COLOR_ID_L$1",
+          "DEPARTMENT_ID",
+          (
+                  SELECT l2."DEPARTMENT"
+                  FROM   "DEPARTMENT_LOOKUP" l2
+                  WHERE  l2."DEPARTMENT_ID" = m."DEPARTMENT_ID") "DEPARTMENT_ID_L$2",
+          "CLOTHING_ID",
+          (
+                  SELECT l3."CLOTHING"
+                  FROM   "CLOTHING_LOOKUP" l3
+                  WHERE  l3."CLOTHING_ID" = m."CLOTHING_ID") "CLOTHING_ID_L$3",
+          b.brand
+      FROM   "PRODUCTS" m,
+          json_table (m.product_details, '$' columns ( brand varchar2(4000) path '$.brand') ) b
+
+  order-by: 
+    type: Item
+    item: 
+      item-name: P1_ORDER_BY
+      order-bys: 
+      - key: PRODUCT_NAME
+        clause: '"PRODUCT_NAME" asc'
+
+      - key: IMAGE_MIME_TYPE
+        clause: '"IMAGE_MIME_TYPE" asc'
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Cards Container
+    template-options: 
+    - '#DEFAULT#'
+    - t-CardsRegion--styleA
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 108781398954203880027
+    appearance: 
+      layout: Grid
+      grid-columns: Auto
+
+    card: 
+      primary-key-column-1: PRODUCT_ID
+
+    title: 
+      advanced-formatting: false
+      column: PRODUCT_NAME
+
+    subtitle: 
+      advanced-formatting: true
+      html-expression: |
+        <small>&BRAND.</small><br />
+        <b class="u-success-text u-pullRight" id="message_&PRODUCT_ID.">
+        {if QUANTITY/} &QUANTITY. in cart {endif/}
+        </b>
+        <b>$&UNIT_PRICE.</b>
+
+    body: 
+      advanced-formatting: false
+      column: IMAGE_MIME_TYPE
+
+    secondary-body: 
+      advanced-formatting: false
+
+    icon-and-badge: 
+      icon-source: No Icon
+
+    media: 
+      advanced-formatting: false
+      source: BLOB Column
+      blob-column: PRODUCT_IMAGE
+      position: First
+      appearance: Widescreen
+      sizing: Fit
+
+    performance: 
+      lazy-loading: false
+
+    pagination: 
+      type: Scroll
+      show-total-count: false
+
+    actions: 
+    - # ====== Action: Full Card ===================================
+      id: 109976928318377294139
+      identification: 
+        type: Full Card
+
+      layout: 
+        sequence: 10
+
+      link: 
+        type: Redirect to Page in this Application
+        target: 
+          url: 'f?p=&APP_ID.:19:&SESSION.::&DEBUG.::P19_PRODUCT_ID:&PRODUCT_ID.'
+          page: 19 # Add to Cart
+          values: 
+            p19_product_id: '&PRODUCT_ID.'
+
+- # ====== Region: Search ======================================
+  id: 108781396649364880020
+  identification: 
+    name: Search
+    type: Faceted Search
+
+  source: 
+    filtered-region: Search Results # 108781396552325880020
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_02
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 4
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--noPadding
+    - t-Region--hideHeader
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+    landmark-label: Filters
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      batch-facet-changes: false
+      compact-numbers-threshold: 10000
+      show-current-facets: Selector
+      current-facets-selector: '#active_facets'
+      show-total-row-count: Yes
+      total-row-count-label: Total Products
+      show-charts: No
+
+  facets: 
+  - # ====== Facet: P1_SEARCH ====================================
+    id: 108781397181676880021
+    identification: 
+      name: P1_SEARCH
+      type: Search
+
+    label: 
+      label: Search
+
+    settings: 
+      search-type: Row Search
+      input-field: Top of Faceted Search Region
+
+    layout: 
+      sequence: 10
+
+    source: 
+      database-column(s): PRODUCT_NAME,IMAGE_MIME_TYPE,IMAGE_FILENAME,COLOR_ID,DEPARTMENT_ID,CLOTHING_ID,IMAGE_CHARSET
+
+    security: 
+      store-value-encrypted-in-session-state: true
+
+  - # ====== Facet: P1_UNIT_PRICE ================================
+    id: 108781397498839880023
+    identification: 
+      name: P1_UNIT_PRICE
+      type: Range
+
+    label: 
+      label: Unit Price
+      show-label-for-current-facet: true
+
+    settings: 
+      select-multiple: true
+      manual-entry: false
+
+    layout: 
+      sequence: 60
+
+    appearance: 
+      display: Inline
+
+    list-of-values: 
+      type: Static Values
+      static-values: 'STATIC2:<10;|10,10 - 20;10|20,20 - 25;20|25,25 - 35;25|35,>=35;35|'
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      show-selected-first: false
+      maximum-displayed-entries: 7
+      display-filter-initially: false
+
+    actions-menu: 
+      filter: true
+      chart: true
+
+    advanced: 
+      show-chart-initially: false
+      collapsible: false
+
+    source: 
+      database-column: UNIT_PRICE
+      data-type: NUMBER
+
+    security: 
+      store-value-encrypted-in-session-state: true
+
+  - # ====== Facet: P1_DEPARTMENT_ID =============================
+    id: 109976926755747294123
+    identification: 
+      name: P1_DEPARTMENT_ID
+      type: Checkbox Group
+
+    label: 
+      label: 'Department '
+      show-label-for-current-facet: true
+
+    layout: 
+      sequence: 30
+
+    appearance: 
+      display: Inline
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: DEPARTMENT_LOOKUP.DEPARTMENT # 108781486233048881558
+      include-null-option: false
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      sort-by-top-counts: true
+      show-selected-first: false
+      maximum-displayed-entries: 7
+      display-filter-initially: false
+
+    actions-menu: 
+      filter: true
+      chart: true
+
+    advanced: 
+      show-chart-initially: false
+      collapsible: false
+
+    source: 
+      database-column: DEPARTMENT_ID
+      data-type: VARCHAR2
+
+    multiple-values: 
+      type: No
+
+    security: 
+      store-value-encrypted-in-session-state: true
+      escape-special-characters: true
+
+  - # ====== Facet: P1_COLOR_ID ==================================
+    id: 109976926868632294124
+    identification: 
+      name: P1_COLOR_ID
+      type: Checkbox Group
+
+    label: 
+      label: Color
+      show-label-for-current-facet: true
+
+    layout: 
+      sequence: 40
+
+    appearance: 
+      display: Inline
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: COLOR_LOOKUP.COLOR # 108781485573875881557
+      include-null-option: false
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      sort-by-top-counts: true
+      show-selected-first: false
+      maximum-displayed-entries: 7
+      display-filter-initially: false
+
+    actions-menu: 
+      filter: true
+      chart: true
+
+    advanced: 
+      show-chart-initially: false
+      collapsible: false
+
+    source: 
+      database-column: COLOR_ID
+      data-type: VARCHAR2
+
+    multiple-values: 
+      type: No
+
+    security: 
+      store-value-encrypted-in-session-state: true
+      escape-special-characters: true
+
+  - # ====== Facet: P1_CLOTHING_ID ===============================
+    id: 109976926981823294125
+    identification: 
+      name: P1_CLOTHING_ID
+      type: Checkbox Group
+
+    label: 
+      label: Clothing
+      show-label-for-current-facet: true
+
+    layout: 
+      sequence: 50
+
+    appearance: 
+      display: Inline
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: CLOTHING_LOOKUP.CLOTHING # 108781486914448881559
+      include-null-option: false
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      sort-by-top-counts: true
+      show-selected-first: false
+      maximum-displayed-entries: 7
+      display-filter-initially: false
+
+    actions-menu: 
+      filter: true
+      chart: true
+
+    advanced: 
+      show-chart-initially: false
+      collapsible: false
+
+    source: 
+      database-column: CLOTHING_ID
+      data-type: VARCHAR2
+
+    multiple-values: 
+      type: No
+
+    security: 
+      store-value-encrypted-in-session-state: true
+      escape-special-characters: true
+
+  filters: 
+  - # ====== Filter: P1_SEARCH ===================================
+    id: 108781397181676880021
+    identification: 
+      name: P1_SEARCH
+      type: Search
+
+    label: 
+      label: Search
+
+    settings: 
+      search-type: Row Search
+      collapsed-search-field: false
+
+    layout: 
+      sequence: 10
+
+    source: 
+      database-column(s): PRODUCT_NAME,IMAGE_MIME_TYPE,IMAGE_FILENAME,COLOR_ID,DEPARTMENT_ID,CLOTHING_ID,IMAGE_CHARSET
+
+    security: 
+      store-value-encrypted-in-session-state: true
+
+  - # ====== Filter: P1_UNIT_PRICE ===============================
+    id: 108781397498839880023
+    identification: 
+      name: P1_UNIT_PRICE
+      type: Range
+
+    label: 
+      label: Unit Price
+
+    settings: 
+      select-multiple: true
+      manual-entry: false
+
+    layout: 
+      sequence: 60
+
+    list-of-values: 
+      type: Static Values
+      static-values: 'STATIC2:<10;|10,10 - 20;10|20,20 - 25;20|25,25 - 35;25|35,>=35;35|'
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      show-selected-first: false
+      client-side-filtering: false
+
+    suggestions: 
+      type: None
+
+    source: 
+      database-column: UNIT_PRICE
+      data-type: NUMBER
+
+    security: 
+      store-value-encrypted-in-session-state: true
+
+  - # ====== Filter: P1_DEPARTMENT_ID ============================
+    id: 109976926755747294123
+    identification: 
+      name: P1_DEPARTMENT_ID
+      type: Checkbox Group
+
+    label: 
+      label: 'Department '
+
+    layout: 
+      sequence: 30
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: DEPARTMENT_LOOKUP.DEPARTMENT # 108781486233048881558
+      include-null-option: false
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      sort-by-top-counts: true
+      show-selected-first: false
+      client-side-filtering: false
+
+    suggestions: 
+      type: None
+
+    source: 
+      database-column: DEPARTMENT_ID
+      data-type: VARCHAR2
+
+    multiple-values: 
+      type: No
+
+    security: 
+      store-value-encrypted-in-session-state: true
+      escape-special-characters: true
+
+  - # ====== Filter: P1_COLOR_ID =================================
+    id: 109976926868632294124
+    identification: 
+      name: P1_COLOR_ID
+      type: Checkbox Group
+
+    label: 
+      label: Color
+
+    layout: 
+      sequence: 40
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: COLOR_LOOKUP.COLOR # 108781485573875881557
+      include-null-option: false
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      sort-by-top-counts: true
+      show-selected-first: false
+      client-side-filtering: false
+
+    suggestions: 
+      type: None
+
+    source: 
+      database-column: COLOR_ID
+      data-type: VARCHAR2
+
+    multiple-values: 
+      type: No
+
+    security: 
+      store-value-encrypted-in-session-state: true
+      escape-special-characters: true
+
+  - # ====== Filter: P1_CLOTHING_ID ==============================
+    id: 109976926981823294125
+    identification: 
+      name: P1_CLOTHING_ID
+      type: Checkbox Group
+
+    label: 
+      label: Clothing
+
+    layout: 
+      sequence: 50
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: CLOTHING_LOOKUP.CLOTHING # 108781486914448881559
+      include-null-option: false
+
+    list-entries: 
+      compute-counts: true
+      show-counts: true
+      zero-count-entries: Hide
+      sort-by-top-counts: true
+      show-selected-first: false
+      client-side-filtering: false
+
+    suggestions: 
+      type: None
+
+    source: 
+      database-column: CLOTHING_ID
+      data-type: VARCHAR2
+
+    multiple-values: 
+      type: No
+
+    security: 
+      store-value-encrypted-in-session-state: true
+      escape-special-characters: true
+
+- # ====== Region: Button Bar ==================================
+  id: 108781397703878880023
+  identification: 
+    name: Button Bar
+    type: Static Content
+
+  source: 
+    html-code: <div id="active_facets"></div>
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    - t-ButtonRegion--noPadding
+    - t-ButtonRegion--noUI
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: ACME Shop ===================================
+  id: 108781399911473880030
+  identification: 
+    name: ACME Shop
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_01
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Hero
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  image: 
+    file-url: '#APP_FILES#icons/app-icon-512.png'
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+page-items: 
+- # ====== Page Item: P1_ORDER_BY ==============================
+  id: 108781399431466880028
+  identification: 
+    name: P1_ORDER_BY
+    type: Select List
+
+  label: 
+    label: Order By
+    alignment: Right
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 10
+    region: Search Results # 108781396552325880020
+    slot: ORDER_BY_ITEM
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Static Values
+    static-values: 'STATIC2:Product Name;PRODUCT_NAME,Image Mime Type;IMAGE_MIME_TYPE'
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Ignore
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: Static
+    static-value: PRODUCT_NAME
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: RESET =======================================
+  id: 108781398224602880024
+  identification: 
+    button-name: RESET
+    label: Reset
+
+  layout: 
+    sequence: 10
+    region: Button Bar # 108781397703878880023
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text with Icon
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--noUI
+    - t-Button--iconLeft
+    icon: fa-undo
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.:RR,1::'
+      page: 1 # Products
+      clear-cache: RR,1
+
+    warn-on-unsaved-changes: Do Not Check
+
+dynamic-actions: 
+- # ====== Dynamic Action: Show Success Message ================
+  id: 109976927716917294133
+  identification: 
+    name: Show Success Message
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Dialog Closed
+    selection-type: Region
+    region: Search Results # 108781396552325880020
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 109976927875439294134
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: |
+        var productAction   = this.data.P19_ACTION,
+            productQuantity = this.data.P19_QUANTITY,
+            productCard$  = apex.jQuery("#message_" + this.data.P19_PRODUCT_ID);
+        
+        if (productAction === 'ADD') {
+            productCard$.text("Added " + productQuantity + " to cart!");
+        } else if (productAction === 'EDIT') {
+            productCard$.text("Updated quantity to " + productQuantity + "!");
+        } else if (productAction === 'DELETE') {
+            productCard$.text("Removed from cart!");
+        }
+
+    execution: 
+      sequence: 10
+      event: Show Success Message # 109976927716917294133
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Update Shopping Cart Header  ========
+  id: 109976927923542294135
+  identification: 
+    name: 'Update Shopping Cart Header '
+
+  execution: 
+    sequence: 20
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Dialog Closed
+    selection-type: Region
+    region: Search Results # 108781396552325880020
+
+  client-side-condition: 
+    type: JavaScript expression
+    javascript-expression: parseInt(this.data.P19_SHOPPING_CART_ITEMS) > 0
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 109976928019797294136
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: |
+        // Update Badge Text
+        apex.jQuery(".js-shopping-cart-item .t-Button-badge").text(this.data.P19_SHOPPING_CART_ITEMS);
+        
+        // Update Icon
+        apex.jQuery(".js-shopping-cart-item .t-Icon").removeClass('fa-cart-empty').addClass('fa-cart-full');
+
+    execution: 
+      sequence: 10
+      event: 'Update Shopping Cart Header ' # 109976927923542294135
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 109976928183992294137
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: |
+        // Update Badge Text
+        apex.jQuery(".js-shopping-cart-item .t-Button-badge").text('');
+        
+        // Update Icon
+        apex.jQuery(".js-shopping-cart-item .t-Icon").removeClass('fa-cart-full').addClass('fa-cart-empty');
+
+    execution: 
+      sequence: 10
+      event: 'Update Shopping Cart Header ' # 109976927923542294135
+      fire-when-event-result-is: False
+      fire-on-initialization: false
+

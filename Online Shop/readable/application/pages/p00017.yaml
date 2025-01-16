@@ -1,0 +1,333 @@
+---
+# ====== Page: Order Information =============================
+id: 17
+identification: 
+  name: Order Information
+  alias: ORDER-INFORMATION
+  title: Order Information
+
+appearance: 
+  page-mode: Normal
+  page-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authentication: Page Is Public
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-meta-tags: false
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Thank you for your order! ===================
+  id: 109763471142160285402
+  identification: 
+    name: Thank you for your order!
+    title: Thank you for your order!
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Content Block
+    template-options: 
+    - '#DEFAULT#'
+    - t-ContentBlock--showIcon
+    - t-ContentBlock--h1
+    icon: fa-heart
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Order: &P17_ORDER. ==========================
+  id: 109763471390311285404
+  identification: 
+    name: 'Order: &P17_ORDER.'
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: Thank you for your order! # 109763471142160285402
+    slot: SUB_REGIONS
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Order Details ===============================
+  id: 109763471485262285405
+  identification: 
+    name: Order Details
+    type: Cards
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT o.order_id,
+          o.order_datetime,
+          o.customer_id,
+          o.order_status,
+          o.store_id,
+          (SELECT Sum(unit_price * quantity)
+              FROM   order_items i
+              WHERE  i.order_id = o.order_id) total
+      FROM   orders o
+      WHERE  order_id = :P17_ORDER
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 20
+    parent-region: 'Order: &P17_ORDER.' # 109763471390311285404
+    slot: SUB_REGIONS
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Cards Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 109763471578581285406
+    appearance: 
+      layout: Grid
+      grid-columns: Auto
+
+    title: 
+      advanced-formatting: false
+
+    subtitle: 
+      advanced-formatting: false
+
+    body: 
+      advanced-formatting: false
+
+    secondary-body: 
+      advanced-formatting: true
+      html-expression: |
+        <b> Order Placed:</b> &ORDER_DATETIME. <br>
+        <b> Status: </b>&ORDER_STATUS. <br>
+        <b> Total: </b>&TOTAL.
+
+    icon-and-badge: 
+      icon-source: No Icon
+
+    media: 
+      advanced-formatting: false
+      source: No Media
+
+    performance: 
+      lazy-loading: false
+
+    pagination: 
+      type: Scroll
+      show-total-count: false
+
+- # ====== Region: Items =======================================
+  id: 109763471775983285408
+  identification: 
+    name: Items
+    type: Cards
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT  o.line_item_id                Item,
+              p.product_name                Product,
+              o.unit_price,
+              o.quantity,
+              ( o.unit_price * o.quantity ) Subtotal,
+              p.product_image
+      FROM   order_items o,
+          products p
+      WHERE  p.product_id = o.product_id
+      AND  order_id = :P17_ORDER
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 10
+    parent-region: Order Details # 109763471485262285405
+    slot: SUB_REGIONS
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Cards Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 109763471857816285409
+    appearance: 
+      layout: Grid
+      grid-columns: Auto
+
+    card: 
+      primary-key-column-1: ITEM
+
+    title: 
+      advanced-formatting: false
+      column: PRODUCT
+
+    subtitle: 
+      advanced-formatting: false
+
+    body: 
+      advanced-formatting: false
+
+    secondary-body: 
+      advanced-formatting: true
+      html-expression: |
+        <b>Quantity: </b> &QUANTITY. <br>
+        <b>Unit Price: </b>&UNIT_PRICE. 
+
+    icon-and-badge: 
+      icon-source: No Icon
+
+    media: 
+      advanced-formatting: false
+      source: BLOB Column
+      blob-column: PRODUCT_IMAGE
+      position: Body
+      appearance: Auto
+      sizing: Fit
+
+    performance: 
+      lazy-loading: false
+
+    pagination: 
+      type: Scroll
+      show-total-count: false
+
+page-items: 
+- # ====== Page Item: P17_ORDER ================================
+  id: 109763471258366285403
+  identification: 
+    name: P17_ORDER
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Thank you for your order! # 109763471142160285402
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+

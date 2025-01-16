@@ -1,0 +1,101 @@
+---
+- # ====== List of Values: COLOR_LOOKUP.COLOR ==================
+  id: 108781485573875881557
+  identification: 
+    name: COLOR_LOOKUP.COLOR
+
+  subscription: 
+    version-number: 15598577664033
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: COLOR_LOOKUP
+
+  column-mapping: 
+    return: COLOR_ID
+    display: COLOR
+    default-sort: COLOR
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: DEPARTMENT_LOOKUP.DEPARTMENT ========
+  id: 108781486233048881558
+  identification: 
+    name: DEPARTMENT_LOOKUP.DEPARTMENT
+
+  subscription: 
+    version-number: 15598577664040
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: DEPARTMENT_LOOKUP
+
+  column-mapping: 
+    return: DEPARTMENT_ID
+    display: DEPARTMENT
+    default-sort: DEPARTMENT
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: CLOTHING_LOOKUP.CLOTHING ============
+  id: 108781486914448881559
+  identification: 
+    name: CLOTHING_LOOKUP.CLOTHING
+
+  subscription: 
+    version-number: 15598577664049
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: CLOTHING_LOOKUP
+
+  column-mapping: 
+    return: CLOTHING_ID
+    display: CLOTHING
+    default-sort: CLOTHING
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: ACCESS_ROLES ========================
+  id: 108781580870478881677
+  identification: 
+    name: ACCESS_ROLES
+
+  subscription: 
+    version-number: 15598577665437
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select role_name d, role_id r
+      from APEX_APPL_ACL_ROLES where application_id = :APP_ID 
+      order by 1
+
+  column-mapping: 
+    return: R
+    display: D
+    default-sort: Use Order By from Query
+
+- # ====== List of Values: EMAIL_USERNAME_FORMAT ===============
+  id: 108781588305466881686
+  identification: 
+    name: EMAIL_USERNAME_FORMAT
+
+  subscription: 
+    version-number: 15598577665631
+
+  source: 
+    location: Static Values
+
+  entries: 
+  - # ====== Entry: Email Addresses ==============================
+    id: 108781588617074881686
+    entry: 
+      sequence: 1
+      display: Email Addresses
+      return: EMAIL
+

@@ -1,0 +1,49 @@
+---
+- # ====== Breadcrumb: Breadcrumb ==============================
+  id: 108780489485128879717
+  identification: 
+    name: Breadcrumb
+
+  entries: 
+  - # ====== Entry: Products =====================================
+    id: 108780489698544879718
+    identification: 
+      name: Products
+      page-number: 1
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.:::'
+        page: 1 # Products
+
+  - # ====== Entry: Dashboard ====================================
+    id: 108781410144079880041
+    identification: 
+      name: Dashboard
+      page-number: 2
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:2:&APP_SESSION.::&DEBUG.:::'
+        page: 2 # Dashboard
+
+  - # ====== Entry: Administration ===============================
+    id: 108781602243493881709
+    identification: 
+      name: Administration
+      page-number: 10000
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:10000:&APP_SESSION.::&DEBUG.:::'
+        page: 10000 # Administration
+

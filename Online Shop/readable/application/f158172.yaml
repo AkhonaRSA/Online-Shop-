@@ -1,0 +1,283 @@
+---
+# ====== Application: ACME Shop ==============================
+identification: 
+  name: ACME Shop
+  alias: ACME-SHOP
+  version: Release 1.0
+
+row-search: 
+  tokenize: true
+  text-query-function: None
+
+availability: 
+  status: Available with Developer Toolbar
+  build-status: Run and Build Application
+
+error-handling: 
+  default-display-location: Inline with Field and in Notification
+
+report-printing: 
+  type: Use Instance Settings
+
+advanced: 
+  friendly-urls: true
+  allow-feedback: true
+  logging: true
+  debugging: true
+  compatibility-mode: 21.2 to 24.1
+  accessible-read-only-items: true
+  pass-ecid: Y
+
+authentication: 
+  public-user: APEX_PUBLIC_USER
+  authentication-scheme: Oracle APEX Accounts # 108780489135038879717
+
+authorization: 
+  authorization-scheme: Reader Rights # 108781383656429879993
+  run-on-public-pages: false
+  run-on-background-job: true
+  source-for-role-or-group-schemes: Access Control User Role Assignments
+
+session-management: 
+  rejoin-sessions: Disabled
+
+session-state-protection: 
+  enabled: true
+
+security: 
+  deep-linking: Disabled
+  browser-cache: Disabled
+  embed-in-frames: Deny
+  referrer-policy: strict-origin
+  html-escaping-mode: Extended
+  runtime-api-usage: 
+  - Modify This Application
+
+database-session: 
+  parsing-schema: WKSP_IVS
+
+globalization: 
+  primary-language: English (en)
+  document-direction: Left-To-Right
+  language-derived-from: Application Primary Language
+  automatic-time-zone: false
+  automatic-csv-encoding: true
+
+application-format-masks: 
+  date: DS
+  timestamp: DS
+  timestamp-time-zone: DS
+
+character-value-comparison: 
+  behavior: Database session NLS setting (default)
+
+logo: 
+  type: Text
+  text: ACME Shop
+
+progressive-web-app: 
+  enable: true
+  installable: false
+  display: Standalone
+  screen-orientation: Any
+  ios-status-bar-style: Default
+  enable-push-notifications: false
+
+navigation: 
+  home-url: 
+    url: 'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.:::'
+    page: 1 # Products
+
+  login-url: 
+    url: 'f?p=&APP_ID.:LOGIN:&APP_SESSION.::&DEBUG.:::'
+    page: LOGIN
+
+navigation-menu: 
+  list-template: Top Navigation Menu
+  template-options: 
+  - '#DEFAULT#'
+  - js-tabLike
+  list-position: Top
+
+navigation-bar: 
+  implementation: List
+  list: Navigation Bar # 108781379397830879977
+  list-template: Navigation Bar
+  template-options: 
+  - '#DEFAULT#'
+
+javascript: 
+  include-jquery-migrate: false
+
+attributes: 
+  theme: Universal Theme # 42
+  global-page: 0
+  enable-end-users-to-choose-theme-style: false
+  add-"built-with-apex"-to-footer: false
+  auto-dismiss-success-messages: false
+
+subscription: 
+  version-number: 15599444876719
+
+substitutions: 
+- # ====== Substitution: APP_NAME ==============================
+  id: 1
+  identification: 
+    name: APP_NAME
+
+  value: 
+    static-value: ACME Shop
+
+component-settings: 
+- # ====== Component Setting: NATIVE_BOSS ======================
+  id: 19950082132853437
+  identification: 
+    name: NATIVE_BOSS
+    type: REST Data Source
+
+  subscription: 
+    version-number: 15599294864679
+
+- # ====== Component Setting: NATIVE_OPEN_AI_ASSISTANT =========
+  id: 108780484990008879713
+  identification: 
+    name: NATIVE_OPEN_AI_ASSISTANT
+    type: Dynamic Action
+
+  subscription: 
+    version-number: 15598577602301
+
+- # ====== Component Setting: NATIVE_COLOR_PICKER ==============
+  id: 108780485270775879714
+  identification: 
+    name: NATIVE_COLOR_PICKER
+    type: Item
+
+  subscription: 
+    version-number: 15598577602374
+
+- # ====== Component Setting: NATIVE_DATE_PICKER_APEX ==========
+  id: 108780485578361879714
+  identification: 
+    name: NATIVE_DATE_PICKER_APEX
+    type: Item
+
+  subscription: 
+    version-number: 15598577602387
+
+- # ====== Component Setting: NATIVE_GEOCODED_ADDRESS ==========
+  id: 108780485835492879714
+  identification: 
+    name: NATIVE_GEOCODED_ADDRESS
+    type: Item
+
+  subscription: 
+    version-number: 15598577602399
+
+- # ====== Component Setting: NATIVE_SELECT_MANY ===============
+  id: 108780486144509879715
+  identification: 
+    name: NATIVE_SELECT_MANY
+    type: Item
+
+  subscription: 
+    version-number: 15598577602402
+
+- # ====== Component Setting: NATIVE_SINGLE_CHECKBOX ===========
+  id: 108780486400352879715
+  identification: 
+    name: NATIVE_SINGLE_CHECKBOX
+    type: Item
+
+  subscription: 
+    version-number: 15598577602402
+
+- # ====== Component Setting: NATIVE_STAR_RATING ===============
+  id: 108780486730115879715
+  identification: 
+    name: NATIVE_STAR_RATING
+    type: Item
+
+  subscription: 
+    version-number: 15598577602407
+
+- # ====== Component Setting: NATIVE_YES_NO ====================
+  id: 108780487079171879715
+  identification: 
+    name: NATIVE_YES_NO
+    type: Item
+
+  subscription: 
+    version-number: 15598577602413
+
+- # ====== Component Setting: NATIVE_GEOCODING =================
+  id: 108780487389190879715
+  identification: 
+    name: NATIVE_GEOCODING
+    type: Process
+
+  settings: 
+    attribute-1: RELAX_HOUSE_NUMBER
+
+  subscription: 
+    version-number: 15598577602413
+
+- # ====== Component Setting: NATIVE_DISPLAY_SELECTOR ==========
+  id: 108780487634352879715
+  identification: 
+    name: NATIVE_DISPLAY_SELECTOR
+    type: Region
+
+  subscription: 
+    version-number: 15598577602416
+
+- # ====== Component Setting: NATIVE_IR ========================
+  id: 108780487994811879716
+  identification: 
+    name: NATIVE_IR
+    type: Region
+
+  subscription: 
+    version-number: 15598577602416
+
+- # ====== Component Setting: NATIVE_MAP_REGION ================
+  id: 108780488292226879716
+  identification: 
+    name: NATIVE_MAP_REGION
+    type: Region
+
+  subscription: 
+    version-number: 15598577602417
+
+- # ====== Component Setting: NATIVE_ADFBC =====================
+  id: 108780488513675879716
+  identification: 
+    name: NATIVE_ADFBC
+    type: REST Data Source
+
+  subscription: 
+    version-number: 15598577602434
+
+application-settings: 
+- # ====== Application Setting: ACCESS_CONTROL_SCOPE ===========
+  id: 108781384522625879996
+  identification: 
+    name: ACCESS_CONTROL_SCOPE
+
+  value: 
+    value: ALL_USERS
+    required: false
+
+  advanced: 
+    valid-values: ACL_ONLY, ALL_USERS
+    on-upgrade-keep-value: true
+
+  subscription: 
+    version-number: 15598587381457
+
+  configuration: 
+    build-option: 'Feature: Access Control' # 108781381889086879990
+
+  comments: 
+    comments: The default access level given to authenticated users who are not in the access control list
+
